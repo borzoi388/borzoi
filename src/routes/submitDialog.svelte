@@ -1,6 +1,6 @@
 <script lang="ts">
 	let isOpen: boolean = false;
-	export let completedDialog
+	export let submitDialog
 	export function openDialog() {
 		if (isOpen === false) {
 			isOpen = true
@@ -13,7 +13,7 @@
 	}
 </script>
 {#if isOpen === true}
-	<div bind:this={completedDialog} class="dialog">
+	<div bind:this={submitDialog} class="dialog">
 		<slot/>
 	</div>
 {/if}
@@ -23,7 +23,11 @@
 		border-style: solid;
 		border-width: 2px;
 		border-color: purple;
-		background-color: palegreen;
+		background-color: lightpink;
 		padding: 5px;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		padding: 10px;
 	}
 </style>
