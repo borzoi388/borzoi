@@ -136,8 +136,10 @@
 
 	import Dialog from './selectDialog.svelte'
 	import ColDialog from './colorDialog.svelte'
+	import ComDialog from './completedDialog.svelte'
 	let colorDialog: undefined
 	let selectDialog: undefined
+	let completedDialog: undefined
 </script>
 <svelte:head>
 	<title>🧼that was a good bath🧼</title>
@@ -148,9 +150,9 @@
 
 		<!--ADD TASK-->
 		<div class="pink border submit">
-			<h1>
+			<h3>
 				Add a task
-			</h1>
+			</h3>
 			<input bind:value={tasksubmission} type="text" placeholder="Task">
 			<input bind:value={taskdescription} type="text" placeholder="Description">
 			<br>
@@ -174,7 +176,7 @@
 
 		<!--ADD CATEGORY-->
 		<div class="pink border submit">
-			<h1>Add a category</h1>
+			<h3>Add a category</h3>
 			<input bind:value={categorysubmission} type="text" placeholder="Name">
 			<div style="display: block; width: 100%">
 				<label class="text">Color:
@@ -200,12 +202,42 @@
 	</section>
 
 
-	<section class="monthlist border">
-		<div class="shark">
-			<h1>
-				To-do:
-			</h1>
+	<section class="middle">
+		<div class="middle border">
+			<div class="title"></div>
+			<button on:click={completedDialog.openDialog}>akdhfks</button>
 		</div>
+		<ComDialog bind:this={completedDialog}>
+			{#each completedtasks as { submission, description, date, category }}
+				<div class="task">
+					<!--CATEGORY OF TASK-->
+					<div class="half" style="grid-column-start: check; grid-column-end: end">
+						<div class="border cateLabel" style="background-color: {colors[categories[category].color].color}; color: {colors[categories[category].color].text}">
+							{categories[category].name}
+						</div>
+
+						<!--TITLE OF TASK-->
+						<div class="pink border" style="grid-column-start: col2; grid-column-end: end; margin-left: 5px; padding: 5px;">
+							<span class="tasktitle">
+								{submission}
+							</span>
+							<span class="taskdate">
+								- {date}
+							</span>
+						</div>
+
+						<!--DESCRIPTION OF TASK-->
+						{#if description.length > 0}
+							<p class="text" style="grid-column-start: col1; grid-column-end: end">
+								{description}
+							</p>
+						{/if}
+					</div>
+				</div>
+			{/each}
+		</ComDialog>
+	</section>
+	<section class="todolist border" style="padding: 5px;">
 		{#if months.length >= 1}
 			{#each months as { submission, description, date, category }, i}
 			<!--TASK-->
@@ -220,7 +252,7 @@
 							</div>
 
 							<!--TITLE OF TASK-->
-							<div class="pink border" style="grid-column-start: col2; grid-column-end: end; margin-left: 5px; padding: 5px;">
+							<div class="green border" style="grid-column-start: col2; grid-column-end: end; margin-left: 5px; padding: 5px;">
 								<span class="tasktitle">
 									{submission}
 								</span>
@@ -230,9 +262,11 @@
 							</div>
 
 							<!--DESCRIPTION OF TASK-->
-							<p class="text" style="grid-column-start: col1; grid-column-end: end">
-								{description}
-							</p>
+							{#if description.length > 0}
+								<p class="text" style="grid-column-start: col1; grid-column-end: end">
+									{description}
+								</p>
+							{/if}
 						</div>
 				</div>
 			{/each}
@@ -241,39 +275,10 @@
 				All done!
 			</div>
 		{/if}
-	</section>
-	<section class="completedlist border">
-		<h1>
-			Completed tasks:
-		</h1>
-			{#each completedtasks as { submission, description, date, category }}
-			<div class="task">
-				<!--CATEGORY OF TASK-->
-				<div class="half" style="grid-column-start: check; grid-column-end: end">
-					<div class="border cateLabel" style="background-color: {colors[categories[category].color].color}; color: {colors[categories[category].color].text}">
-						{categories[category].name}
-					</div>
 
-					<!--TITLE OF TASK-->
-					<div class="green border" style="grid-column-start: col2; grid-column-end: end; margin-left: 5px; padding: 5px;">
-						<span class="tasktitle">
-							{submission}
-						</span>
-						<span class="taskdate">
-							- {date}
-						</span>
-					</div>
-
-					<!--DESCRIPTION OF TASK-->
-					<p class="text" style="grid-column-start: col1; grid-column-end: end">
-						{description}
-					</p>
-				</div>
-		</div>
-			{/each}
 	</section>
 {:else}
-	<section class="loginpage border">
+	<section class="loginpage border" style="padding: 5px;">
 		<h1>Log In</h1>
 		<label>
 			Username:
@@ -295,11 +300,16 @@
 		color: purple;
 		font-weight: bold;
 	}
+
+	h3 {
+		color: purple;
+		font-weight: bold;
+	}
+
 	section {
-		padding: 10px;
 		margin: 5px;
 		text-align: justify;
-		overflow-x: hidden;
+		overflow-x: visible;
 	}
 	section.loginpage {
 		background-color: lightskyblue;
@@ -312,17 +322,24 @@
 	section.monthsubmission {
 		grid-column-start: col1;
 		grid-column-end: col2;
-		grid-row-start: body;
+		align-self: start;
+		position: sticky;
+		top: 10px;
 	}
-	section.monthlist {
-		background-color: lightgreen;
-		color: black;
+	section.middle {
 		grid-column-start: col2;
 		grid-column-end: col4;
 		grid-row-start: body;
 		overflow-y: scroll;
 	}
-	section.completedlist {
+
+	div.middle {
+		background-color: lightgreen;
+		color: black;
+		margin-bottom: 10px;
+	}
+
+	section.todolist {
 		background-color: lightpink;
 		color: black;
 		grid-column-start: col4;
@@ -340,10 +357,6 @@
 		border-color: purple;
 		color: purple;
 		border-width: 2px;
-	}
-
-	h1 {
-		width: 100%;
 	}
 
 	.task {
@@ -418,11 +431,12 @@
 		text-align: center;
 	}
 
-	.shark {
-		background: url(src/lib/images/shark.gif);
+	.title {
+		background: url(src/lib/images/title.gif);
 		background-size: contain;
 		width: 100%;
-		background-repeat: repeat-x;
+		height: 70px;
+		repeat: no-repeat;
 		background-position: top;
 		text-align: center;
 	}

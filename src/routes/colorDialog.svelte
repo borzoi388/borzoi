@@ -28,7 +28,9 @@
 		padding: 5px;
 		display: flex;
 		flex-wrap: wrap;
-		justify-items: space-between;
+		justify-content: center;
 		margin-bottom: 10px;
+		max-height: 100px;
+		overflow-y: scroll;
 	}
 </style>
