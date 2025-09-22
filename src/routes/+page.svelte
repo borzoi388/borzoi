@@ -8,6 +8,9 @@
 	let username: String
 	let cateNumber: number = 0
 	let colorNumber: number = 0
+	let colNameSub: string
+	let colorSubmission: string = "lightsteelblue"
+	let addColorState: string = "colorPick"
 	let sdate: Date = new Date()
 	let months: Array<{submission: string, description: string, date: Date, category: number}> = [
 		{ submission: "Mark this as complete", description: "Very difficult task", date: sdate, category: 0 }
@@ -63,6 +66,7 @@
 	let categorysubmission: string = ""
 	let showCompleted: boolean = false
 	let showCaol: boolean = false
+	let textDark: boolean = true
 
 	function addmonth() {
 		if (tasksubmission.length < 1) {
@@ -86,7 +90,8 @@
 		} else if (categorysubmission.length > 18) {
 			alert("too long! please keep it under 18 characters")
 		} else {
-
+			submitDialog.closeDialog()
+			addColDialog.closeDialog()
 			categories = [
 				...categories,
 				{color: colorNumber, name: categorysubmission}
@@ -97,14 +102,23 @@
 		}
 	}
 
+	function toggleColorPick() {
+		if (addColorState === "colorPick") {
+			addColorState = "inputCSS"
+		} else {
+			addColorState = "colorPick"
+		}
+	}
+
 	function selectCate() {
 		cateNumber = selected
-		cateNumber = cateNumber
+		selectDialog.closeDialog()
 	}
 
 	function selectColor() {
 		colorNumber = selected
-		colorNumber = colorNumber
+		colorDialog.closeDialog()
+		addColorDialog.closeDialog()
 	}
 
 	function completed() {
@@ -155,9 +169,38 @@
 		}
 	}
 
+	function addColor() {
+		if (colNameSub === undefined) {
+			colNameSub = "🦐"
+		}
+		if (textDark === true) {
+			colors = [
+				...colors,
+				{ name: colNameSub, color: colorSubmission , text: "purple", custom: true }
+			]
+		} else {
+			colors = [
+				...colors,
+				{ name: colNameSub, color: colorSubmission , text: "lemonchiffon", custom: true }
+			]
+		}
+
+		addColDialog.closeDialog()
+	}
+
+	function toggleTextColor() {
+		if (textDark === true) {
+			textDark = false
+		} else {
+			textDark = true
+		}
+	}
+
 	import Dialog from './selectDialog.svelte'
 	import ColDialog from './colorDialog.svelte'
     import SubmitDialog from './submitDialog.svelte'
+	import AddColDialog from './addColorDialog.svelte'
+	let addColDialog: undefined
 	let submitDialog: undefined
 	let colorDialog: undefined
 	let selectDialog: undefined
@@ -175,7 +218,7 @@
 				Add a task
 			</h3>
 			<input bind:value={tasksubmission} type="text" placeholder="Task">
-			<input bind:value={taskdescription} type="text" placeholder="Description">
+			<input bind:value={taskdescription} type="text" placeholder="Description (optional)">
 			<br>
 			<div style="display: block; width: 100%">
 				<label class="text">Category:
@@ -202,7 +245,7 @@
 				<input bind:value={categorysubmission} type="text" placeholder="Name">
 				<div style="display: block; width: 100%">
 					<label class="text">Color:
-						<button on:click={() => colorDialog.openDialog()} style="margin-bottom: 10px; background-color: {colors[colorNumber].color}; color: {colors[colorNumber].text}">
+						<button on:click={colorDialog.openDialog} style="margin-bottom: 10px; background-color: {colors[colorNumber].color}; color: {colors[colorNumber].text}">
 							{colors[colorNumber].name}
 						</button><br>
 					</label>
@@ -211,15 +254,51 @@
 				<!--CHOOSE COLOR DIALOG-->
 				<ColDialog bind:this={colorDialog}>
 					{#each colors as { color, name, text }, i}
-						<button on:click={() => {selected = i;}} on:click={selectColor} on:click={colorDialog.closeDialog} style="background-color: {color}; margin: 5px; color: {text}">
+						<button on:click={() => {selected = i;}} on:click={selectColor} style="background-color: {color}; margin: 5px; color: {text}">
 							{name}
 						</button>
 					{/each}
+					<button on:click={addColDialog.openDialog} style="margin: 5px; background-color: transparent">＋</button>
 				</ColDialog>
-				<button on:click={addCate} on:click={submitDialog.closeDialog}>
+				<button on:click={addCate}>
 					Submit
 				</button>
 		</SubmitDialog>
+
+		<AddColDialog bind:this={addColDialog}>
+			<!--ADD COLOR-->
+			<h3>Add a color</h3>
+			<input bind:value={colNameSub} placeholder="Name (optional">
+		
+			{#if addColorState === "colorPick"}
+				<input type="color" bind:value={colorSubmission}>
+				<div class="half" style="width: 100%">
+					<button on:click={toggleColorPick} style="grid-column-start: col1; grid-column-end: middle; margin-right: 5px">Use CSS Color?</button>
+					<button on:click={toggleTextColor} style="grid-column-start: middle; grid-column-end: end; margin-left: 5px; background-color: {colorSubmission}">
+						{#if textDark === true}
+							<span style="color: purple">Light Text?</span>
+						{:else}
+							<span style="color: lemonchiffon">Dark Text?</span>
+						{/if}
+					</button>
+				</div>
+			{:else}
+				<input type="text" bind:value={colorSubmission} placeholder="Input CSS Color">
+				<div class="half" style="width: 100%">
+					<button on:click={toggleColorPick} style="grid-column-start: col1; grid-column-end: middle; margin-right: 5px">Pick Color?</button>
+					<button on:click={toggleTextColor} style="grid-column-start: middle; grid-column-end: end; margin-left: 5px; background-color: {colorSubmission}">
+						{#if textDark === true}
+							<span style="color: purple">Light Text?</span>
+						{:else}
+							<span style="color: lemonchiffon">Dark Text?</span>
+						{/if}
+					</button>
+				</div>
+			{/if}
+			<button on:click={addColor} style="display: block; margin-top: 10px;">
+				Submit
+			</button>
+		</AddColDialog>
 
 	</section>
 
@@ -468,7 +547,7 @@
 
 	.half {
 		display: grid;
-		grid-template-columns: [col1] 20% [col2] 80% [end];
+		grid-template-columns: [col1] 25% [col2] 25% [middle] 50% [end];
 	}
 
 	.yippee {
@@ -537,5 +616,11 @@
 
 	div {
 		overflow-x: hidden;
+	}
+
+	input.half {
+		grid-column-start: middle; 
+		grid-column-end: end; 
+		margin-left: 5px;
 	}
 </style>

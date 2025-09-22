@@ -30,7 +30,7 @@
 		flex-wrap: wrap;
 		justify-content: center;
 		margin-bottom: 10px;
-		max-height: 100px;
+		max-height: 80px;
 		overflow-y: scroll;
 	}
 </style>
