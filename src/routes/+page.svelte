@@ -62,6 +62,7 @@
 	let ctdescription: string
 	let categorysubmission: string = ""
 	let showCompleted: boolean = false
+	let showCaol: boolean = false
 
 	function addmonth() {
 		if (tasksubmission.length < 1) {
@@ -138,6 +139,14 @@
 		loggedin = loggedin
 	}
 
+	function toggleShowCaol() {
+		if (showCaol === true) {
+			showCaol = false
+		} else {
+			showCaol = true
+		}
+	}
+
 	function toggleShowCom() {
 		if (showCompleted === true) {
 			showCompleted = false
@@ -148,7 +157,7 @@
 
 	import Dialog from './selectDialog.svelte'
 	import ColDialog from './colorDialog.svelte'
-    import SubmitDialog from './submitDialog.svelte';
+    import SubmitDialog from './submitDialog.svelte'
 	let submitDialog: undefined
 	let colorDialog: undefined
 	let selectDialog: undefined
@@ -219,6 +228,7 @@
 		<div class="middle border">
 			<div class="title"></div>
 			<div class="container">
+
 				<button on:click={toggleShowCom} class="pink">
 					{#if showCompleted === false}
 						Show Completed Tasks
@@ -226,8 +236,18 @@
 						Hide Completed Tasks
 					{/if}
 				</button>
+
+				<button on:click={toggleShowCaol} class="pink">
+					{#if showCaol === true}
+						Hide Cat Owl Guardian
+					{:else}
+						Show Cat Owl Guardian
+					{/if}
+				</button>
+
 			</div>
 		</div>
+
 	</section>
 	<section class="todolist border" style="padding: 5px;">
 		{#if showCompleted === false}
@@ -319,6 +339,9 @@
 		</button>
 	</section>
 {/if}
+{#if showCaol === true}
+	<div class="caol"></div>
+{/if}
 <style>
 	h1 {
 		color: purple;
@@ -333,7 +356,7 @@
 	section {
 		margin: 5px;
 		text-align: justify;
-		overflow-x: visible;
+		overflow-x: hidden;
 	}
 	section.loginpage {
 		background-color: lightskyblue;
@@ -354,7 +377,6 @@
 		grid-column-start: col2;
 		grid-column-end: col4;
 		grid-row-start: body;
-		overflow-y: scroll;
 		position: sticky;
 		top: 10px;
 		align-self: start;
@@ -499,5 +521,21 @@
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: space-evenly;
+	}
+
+	.caol {
+		background: url(src/lib/images/caol.jpg);
+		width: 200px;
+		height: 200px;
+		position: fixed;
+		bottom: 10px;
+		right: 10px;
+		background-size: contain;
+		background-repeat: no-repeat;
+		background-position: center;
+	}
+
+	div {
+		overflow-x: hidden;
 	}
 </style>
