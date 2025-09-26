@@ -4,16 +4,19 @@
 	const correctusername: string = "1540"
 	let loggedin: string = "true"
 	let password: string = ""
-	let selected: number
 	let username: String
 	let cateNumber: number = 0
-	let colorNumber: number = 0
-	let colNameSub: string
-	let colorSubmission: string = "lightsteelblue"
+	let colorNumber: number = 4
+	let colorSubmission: string = ""
 	let addColorState: string = "colorPick"
 	let sdate: Date = new Date()
+	let showCustom: boolean = false
 	let months: Array<{submission: string, description: string, date: Date, category: number}> = [
 		{ submission: "Mark this as complete", description: "Very difficult task", date: sdate, category: 0 }
+	]
+
+	let compButtonStates: Array<{restore: boolean, delete: boolean}> = [
+		{ restore: false, delete: false }
 	]
 
 	let categories: Array<{color: number, name: string}> = [
@@ -25,70 +28,100 @@
 	]
 
 	//i'm sorry for this horrific block of an array but i don't know how to import data yet 😝
-	let colors: Array<{color: string; name: string; text: string; custom: boolean}> = [
-            { color: "Salmon", name: "🦐", text: "purple", custom: false},
-            { color: "PeachPuff", name: "🦐", text: "purple", custom: false},
-            { color: "PapayaWhip", name: "🦐", text: "purple", custom: false},
-            { color: "PaleGreen", name: "🦐", text: "purple", custom: false},
-            { color: "PaleTurquoise", name: "🦐", text: "purple", custom: false},
-            { color: "LightSkyBlue", name: "🦐", text: "purple", custom: false},
-            { color: "Plum", name: "🦐", text: "purple", custom: false},
-            { color: "LightPink", name: "🦐", text: "purple", custom: false},
-            { color: "Crimson", name: "🦐", text: "lemonchiffon", custom: false},
-            { color: "DarkOrange", name: "🦐", text: "lemonchiffon", custom: false},
-            { color: "Gold", name: "🦐", text: "purple", custom: false},
-            { color: "YellowGreen", name: "🦐", text: "purple", custom: false},
-            { color: "LightSeaGreen", name: "🦐", text: "lemonchiffon", custom: false},
-            { color: "SteelBlue", name: "🦐", text: "lemonchiffon", custom: false},
-            { color: "MediumOrchid", name: "🦐", text: "lemonchiffon", custom: false},
-            { color: "HotPink", name: "🦐", text: "lemonchiffon", custom: false},
-            { color: "FireBrick", name: "🦐", text: "lemonchiffon", custom: false},
-            { color: "Chocolate", name: "🦐", text: "lemonchiffon", custom: false},
-            { color: "Orange", name: "🦐", text: "lemonchiffon", custom: false},
-            { color: "SeaGreen", name: "🦐", text: "lemonchiffon", custom: false},
-            { color: "Teal", name: "🦐", text: "lemonchiffon", custom: false},
-            { color: "RoyalBlue", name: "🦐", text: "lemonchiffon", custom: false},
-            { color: "RebeccaPurple", name: "🦐", text: "lemonchiffon", custom: false},
-            { color: "MediumVioletRed", name: "🦐", text: "lemonchiffon", custom: false},
-            { color: "GhostWhite", name: "🦐", text: "purple", custom: false},
-            { color: "LightSteelBlue", name: "🦐", text: "purple", custom: false},
-            { color: "SlateGray", name: "🦐", text: "lemonchiffon", custom: false},
-            { color: "DarkSlateGray", name: "🦐", text: "lemonchiffon", custom: false},
-            { color: "#008FC4", name: "🦐", text: "lemonchiffon", custom: false},
+	let colors: Array<{color: string; text: string; custom: boolean}> = [
+            { color: "Salmon", text: "purple", custom: false},
+            { color: "PeachPuff", text: "purple", custom: false},
+            { color: "PapayaWhip", text: "purple", custom: false},
+            { color: "PaleGreen", text: "purple", custom: false},
+            { color: "PaleTurquoise", text: "purple", custom: false},
+            { color: "LightSkyBlue", text: "purple", custom: false},
+            { color: "Plum", text: "purple", custom: false},
+            { color: "LightPink", text: "purple", custom: false},
+            { color: "Crimson", text: "lemonchiffon", custom: false},
+            { color: "DarkOrange", text: "lemonchiffon", custom: false},
+            { color: "Gold", text: "purple", custom: false},
+            { color: "YellowGreen", text: "purple", custom: false},
+            { color: "LightSeaGreen", text: "lemonchiffon", custom: false},
+            { color: "SteelBlue", text: "lemonchiffon", custom: false},
+            { color: "MediumOrchid", text: "lemonchiffon", custom: false},
+            { color: "HotPink", text: "lemonchiffon", custom: false},
+            { color: "FireBrick", text: "lemonchiffon", custom: false},
+            { color: "Chocolate", text: "lemonchiffon", custom: false},
+            { color: "Orange", text: "lemonchiffon", custom: false},
+            { color: "SeaGreen", text: "lemonchiffon", custom: false},
+            { color: "Teal", text: "lemonchiffon", custom: false},
+            { color: "RoyalBlue", text: "lemonchiffon", custom: false},
+            { color: "RebeccaPurple", text: "lemonchiffon", custom: false},
+            { color: "MediumVioletRed", text: "lemonchiffon", custom: false},
+            { color: "GhostWhite", text: "purple", custom: false},
+            { color: "LightSteelBlue", text: "purple", custom: false},
+            { color: "SlateGray", text: "lemonchiffon", custom: false},
+            { color: "DarkSlateGray", text: "lemonchiffon", custom: false},
+            { color: "#008FC4", text: "lemonchiffon", custom: false},
             
         ]
 
-	let tasksubmission: string 
+	let tasksubmission: string = ""
 	let taskdescription: string = ""
-	let ctCate: number
-	let cttitle: string
-	let ctdescription: string
 	let categorysubmission: string = ""
 	let showCompleted: boolean = false
 	let showCaol: boolean = false
 	let textDark: boolean = true
+	let colorsOpen: boolean = false
+	let sortOpen: boolean = false
+	let sortNumber: number = -1
 
+	function toggleColors() {
+		if (colorsOpen === false) {
+			colorsOpen = true
+			colorDialog.openDialog()
+		} else {
+			colorsOpen = false
+			colorDialog.closeDialog()
+		}
+	}
+
+	function toggleSort() {
+		if (sortOpen === false) {
+			sortOpen = true
+			sortByDialog.openDialog()
+		} else {
+			sortOpen = false
+			sortByDialog.closeDialog()
+		}
+	}
+	
 	function addmonth() {
 		if (tasksubmission.length < 1) {
-			alert("Need a title!")
+			alert("Please input a title!")
 		} else {
 			sdate = new Date()
 			months = [
 				...months,
 				{ submission: tasksubmission, description: taskdescription, date: sdate, category: cateNumber, }
 			]
+			showCompleted = false
 			tasksubmission = ""
 			taskdescription = ""
 			cateNumber = 0
 		}
 
+	}
+
+
+	function toggleCustom() {
+		if (showCustom === false) {
+			showCustom = true
+		} else {
+			showCustom = false
 		}
+	}
 
 	function addCate() {
 		if (categorysubmission.length < 1) {
-			alert("Need a title!")
+			alert("Please input a title!")
 		} else if (categorysubmission.length > 18) {
-			alert("too long! please keep it under 18 characters")
+			alert("Too long! Please keep it under 18 characters")
 		} else {
 			submitDialog.closeDialog()
 			addColDialog.closeDialog()
@@ -110,28 +143,77 @@
 		}
 	}
 
-	function selectCate() {
+	function selectCate(selected: number) {
 		cateNumber = selected
 		selectDialog.closeDialog()
 	}
 
-	function selectColor() {
+	function sortCate(selected: number) {
+		sortNumber = selected
+		sortOpen = false
+		sortByDialog.closeDialog()
+	}
+
+	function selectColor(selected: number) {
 		colorNumber = selected
+		colorOpen = false
 		colorDialog.closeDialog()
 		addColorDialog.closeDialog()
 	}
 
-	function completed() {
-		cttitle = months[selected].submission
-		ctdescription = months[selected].description
-		ctCate = months[selected].category
-		sdate = new Date()
+	function completed(selected: number) {
 		completedtasks = [
 			...completedtasks,
-			{ submission: cttitle, description: ctdescription, date: sdate, category: ctCate }
+			{ 
+				submission: months[selected].submission, 
+				description: months[selected].description, 
+				date: new Date(), 
+				category: months[selected].category 
+			}
+		]
+		compButtonStates = [
+			...compButtonStates,
+			{ restore: false, delete: false }
 		]
 		months.splice(selected, 1)
 		months = months
+	}
+
+	function deleteComp(selected: number) {
+		if (compButtonStates[selected].delete === true) {
+			compButtonStates.splice(selected, 1)
+			completedtasks.splice(selected, 1)
+			completedtasks = completedtasks
+		} else {
+			compButtonStates[selected].delete = true
+		}
+	}
+
+	function restoreTask(selected: number) {
+		if (compButtonStates[selected].restore === true) {
+			months = [
+				...months,
+				{ 
+					submission: completedtasks[selected].submission, 
+					description: completedtasks[selected].description, 
+					date: completedtasks[selected].date, 
+					category: completedtasks[selected].category 
+				}
+			]
+			completedtasks.splice(selected, 1)
+			compButtonStates.splice(selected, 1)
+			completedtasks = completedtasks
+		} else {
+			compButtonStates[selected].restore = true
+		}
+	}
+
+	function cancelRestore(selected: number) {
+		compButtonStates[selected].restore = false
+	}
+
+	function cancelDelete(selected: number) {
+		compButtonStates[selected].delete = false
 	}
 
 	function login() {
@@ -166,26 +248,31 @@
 			showCompleted = false
 		} else {
 			showCompleted = true
+			compButtonStates = compButtonStates.map(
+ 				obj => ({restore: false, delete: false})
+			);
 		}
 	}
 
 	function addColor() {
-		if (colNameSub === undefined) {
-			colNameSub = "🦐"
-		}
-		if (textDark === true) {
-			colors = [
-				...colors,
-				{ name: colNameSub, color: colorSubmission , text: "purple", custom: true }
-			]
+		if (colorSubmission.length < 1) {
+			alert("Please input a color!")
 		} else {
-			colors = [
-				...colors,
-				{ name: colNameSub, color: colorSubmission , text: "lemonchiffon", custom: true }
-			]
-		}
+			if (textDark === true) {
+				colors = [
+					...colors,
+					{ color: colorSubmission , text: "purple", custom: true }
+				]
+			} else {
+				colors = [
+					...colors,
+					{ color: colorSubmission , text: "lemonchiffon", custom: true }
+				]
+			}
 
-		addColDialog.closeDialog()
+			addColDialog.closeDialog()
+			colorSubmission = ""
+		}
 	}
 
 	function toggleTextColor() {
@@ -200,6 +287,8 @@
 	import ColDialog from './colorDialog.svelte'
     import SubmitDialog from './submitDialog.svelte'
 	import AddColDialog from './addColorDialog.svelte'
+	import SortByDialog from './sortByDialog.svelte'
+	let sortByDialog: undefined
 	let addColDialog: undefined
 	let submitDialog: undefined
 	let colorDialog: undefined
@@ -230,7 +319,7 @@
 			<!--CATEGORY CHOOSE-->
 			<Dialog bind:this={selectDialog}>
 				{#each categories as { color, name }, i}
-					<button on:click={() => {selected = i;}} on:click={selectCate} on:click={selectDialog.closeDialog} style="background-color: {colors[color].color}; margin: 5px; color: {colors[color].text}">{name}</button>
+					<button on:click={() => selectCate(i)} style="background-color: {colors[color].color}; margin: 5px; color: {colors[color].text}">{name}</button>
 				{/each}
 				<button on:click={submitDialog.openDialog} style="margin: 5px; background-color: transparent">＋</button>
 			</Dialog>
@@ -241,23 +330,43 @@
 
 		<SubmitDialog bind:this={submitDialog}>
 			<!--ADD CATEGORY-->
-				<h3>Add a category</h3>
-				<input bind:value={categorysubmission} type="text" placeholder="Name">
-				<div style="display: block; width: 100%">
-					<label class="text">Color:
-						<button on:click={colorDialog.openDialog} style="margin-bottom: 10px; background-color: {colors[colorNumber].color}; color: {colors[colorNumber].text}">
-							{colors[colorNumber].name}
-						</button><br>
-					</label>
+				<input bind:value={categorysubmission} type="text" placeholder="New Category Name">
+				<div class="half" style="width: 100%; margin-bottom: 10px">
+					<div style="grid-column-start: col1; grid-column-end: middle; margin-right: 5px">
+						<label class="text">Color:
+							<button on:click={toggleColors} style="background-color: {colors[colorNumber].color}; color: {colors[colorNumber].text}">
+								🦐
+							</button>
+						</label>
+					</div>
+					{#if colors.length > 29 && colorsOpen === true}
+						<button on:click={toggleCustom} style="grid-column-start: middle; grid-column-end: end">
+							{#if showCustom === false}
+								Filter: All
+							{:else}
+								Filter: Custom
+							{/if}
+						</button>
+					{/if}
 				</div>
 
 				<!--CHOOSE COLOR DIALOG-->
 				<ColDialog bind:this={colorDialog}>
-					{#each colors as { color, name, text }, i}
-						<button on:click={() => {selected = i;}} on:click={selectColor} style="background-color: {color}; margin: 5px; color: {text}">
-							{name}
-						</button>
-					{/each}
+					{#if showCustom === false}
+						{#each colors as { color, text}, i}
+							<button on:click={() => selectColor(i)} style="background-color: {color}; margin: 5px; color: {text}">
+								🦐
+							</button>
+						{/each}
+					{:else}
+						{#each colors as { color, text, custom }, i}
+							{#if custom === true}
+								<button on:click={() => selectColor(i)} style="background-color: {color}; margin: 5px; color: {text}">
+									🦐
+								</button>
+							{/if}
+						{/each}
+					{/if}
 					<button on:click={addColDialog.openDialog} style="margin: 5px; background-color: transparent">＋</button>
 				</ColDialog>
 				<button on:click={addCate}>
@@ -267,13 +376,10 @@
 
 		<AddColDialog bind:this={addColDialog}>
 			<!--ADD COLOR-->
-			<h3>Add a color</h3>
-			<input bind:value={colNameSub} placeholder="Name (optional">
-		
 			{#if addColorState === "colorPick"}
 				<input type="color" bind:value={colorSubmission}>
 				<div class="half" style="width: 100%">
-					<button on:click={toggleColorPick} style="grid-column-start: col1; grid-column-end: middle; margin-right: 5px">Use CSS Color?</button>
+					<button on:click={toggleColorPick} style="grid-column-start: col1; grid-column-end: middle; margin-right: 5px">Input hex/CSS?</button>
 					<button on:click={toggleTextColor} style="grid-column-start: middle; grid-column-end: end; margin-left: 5px; background-color: {colorSubmission}">
 						{#if textDark === true}
 							<span style="color: purple">Light Text?</span>
@@ -283,7 +389,7 @@
 					</button>
 				</div>
 			{:else}
-				<input type="text" bind:value={colorSubmission} placeholder="Input CSS Color">
+				<input type="text" bind:value={colorSubmission} placeholder="Input CSS Color/hex value">
 				<div class="half" style="width: 100%">
 					<button on:click={toggleColorPick} style="grid-column-start: col1; grid-column-end: middle; margin-right: 5px">Pick Color?</button>
 					<button on:click={toggleTextColor} style="grid-column-start: middle; grid-column-end: end; margin-left: 5px; background-color: {colorSubmission}">
@@ -324,22 +430,56 @@
 					{/if}
 				</button>
 
+				<a href="https://www.youtube.com/watch?v=WCs-7HmA9Qk" target="blank" class="pink">
+					Seal Cave
+				</a>
+
 			</div>
 		</div>
 
 	</section>
 	<section class="todolist border" style="padding: 5px;">
+			<div class="half">
+				<h3 style="grid-column-start: col1; grid-column-end: middle">
+					{#if showCompleted === false}
+						To-Do
+					{:else}
+						Completed
+					{/if}
+				</h3>
+				<div class="border" style="grid-column-start: middle; grid-column-end: end; background: lemonchiffon; margin: 5px; margin-left: 0px; align-content: center;">
+					<label class="text">
+						Filter:
+							{#if sortNumber > -1}
+								<button on:click={toggleSort} style="background-color: {colors[categories[sortNumber].color].color}; color: {colors[categories[sortNumber].color].text}">{categories[sortNumber].name}</button>
+							{:else}
+								<button on:click={toggleSort}>None</button>
+							{/if}
+					</label>
+				</div>
+			</div>
+			<SortByDialog bind:this={sortByDialog}>
+				<button on:click={() => sortCate(-1)} style="margin: 5px;">
+					Show All
+				</button>
+				{#each categories as { color, name }, i}
+					<button on:click={() => sortCate(i)} style="background-color: {colors[color].color}; margin: 5px; color: {colors[color].text}">{name}</button>
+				{/each}
+			</SortByDialog>
+
 		{#if showCompleted === false}
-			<h3>Tasks:</h3>
+
 			{#if months.length >= 1}
+				
 				{#each months as { submission, description, date, category }, i}
 				<!--TASK-->
-					<div class="task">
-							<button on:click={() => {selected = i;}} on:click={completed} style="grid-column-start: check; grid-column-end: task">
+					{#if sortNumber < 0 || sortNumber === category}
+						<div class="task">
+							<button on:click={() => completed(i)} style="grid-column-start: check; grid-column-end: task">
 								✓
 							</button>
 							<!--CATEGORY OF TASK-->
-							<div class="half" style="grid-column-start: category; grid-column-end: end; margin-left: 5px">
+							<div class="half" style="grid-column-start: category; grid-column-end: end; margin-left: 10px">
 								<div class="border cateLabel" style="background-color: {colors[categories[category].color].color}; color: {colors[categories[category].color].text}">
 									{categories[category].name}
 								</div>
@@ -361,41 +501,75 @@
 									</p>
 								{/if}
 							</div>
-					</div>
+						</div>
+					{/if}
 				{/each}
 			{:else}
 				<div class="yippee">
-					All done!
+					<h3>all done!</h3>
 				</div>
 			{/if}
 		{:else}
-			<h3>Completed:</h3>
-			{#each completedtasks as { submission, description, date, category }}
-				<div class="task">
-					<!--CATEGORY OF TASK-->
-					<div class="half" style="grid-column-start: check; grid-column-end: end">
-						<div class="border cateLabel" style="background-color: {colors[categories[category].color].color}; color: {colors[categories[category].color].text}">
-							{categories[category].name}
-						</div>
+			
+			{#each completedtasks as { submission, description, date, category }, i}
+				{#if sortNumber < 0 || sortNumber === category}
+					<div class="task">
+						<!--CATEGORY OF TASK-->
+						<div class="half" style="grid-column-start: check; grid-column-end: end; margin-bottom: 5px;">
+							<div class="border cateLabel" style="background-color: {colors[categories[category].color].color}; color: {colors[categories[category].color].text}; margin-bottom: 2.5px">
+								{categories[category].name}
+							</div>
 
-						<!--TITLE OF TASK-->
-						<div class="green border" style="grid-column-start: col2; grid-column-end: end; margin-left: 5px; padding: 5px;">
-							<span class="tasktitle">
-								{submission}
-							</span>
-							<span class="taskdate">
-								- {date}
-							</span>
-						</div>
+							<!--TITLE OF TASK-->
+							<div class="green border" style="grid-column-start: col2; grid-column-end: end; margin-left: 5px; padding: 5px; margin-bottom: 2.5px;">
+								<span class="tasktitle">
+									{submission}
+								</span>
+								<span class="taskdate">
+									- {date}
+								</span>
+							</div>
 
-						<!--DESCRIPTION OF TASK-->
-						{#if description.length > 0}
-							<p class="text" style="grid-column-start: col1; grid-column-end: end">
-								{description}
-							</p>
-						{/if}
+							<!--DESCRIPTION OF TASK-->
+							{#if description.length > 0}
+								<p class="text" style="grid-column-start: col1; grid-column-end: end;">
+									{description}
+								</p>
+							{/if}
+							
+						</div>
+							<div class="half" style="grid-column-start: check; grid-column-end: end">
+								{#if compButtonStates[i].restore === false}
+									<button on:click={() => restoreTask(i)} style="grid-column-start: col1; margin-right: 2.5px; grid-column-end: middle; overflow-x: hidden;">
+										Restore Task
+									</button>
+								{:else}
+									<div class="half" style="grid-column-start: col1; grid-column-end: middle; margin-right: 2.5px;">
+										<button on:click={() => cancelRestore(i)} style="grid-column-start: col1; margin-right: 2.5px; grid-column-end: middle; overflow-x: hidden;">
+											Cancel
+										</button>
+										<button on:click={() => restoreTask(i)} style="grid-column-start: middle; margin-left: 2.5px; grid-column-end: end; overflow-x: hidden;">
+											Confirm
+										</button>
+									</div>
+								{/if}
+								{#if compButtonStates[i].delete === false}
+									<button on:click={() => deleteComp(i)} class="salmon" style="grid-column-start: middle; margin-left: 2.5px; grid-column-end: end; overflow-x: hidden;">
+										Delete Task
+									</button>
+								{:else}
+									<div class="half" style="grid-column-start: middle; grid-column-end: end; margin-left: 2.5px;">
+										<button on:click={() => cancelDelete(i)} class="salmon" style="grid-column-start: col1; margin-right: 2.5px; grid-column-end: middle; overflow-x: hidden;">
+											Cancel
+										</button>
+										<button on:click={() => deleteComp(i)} class="salmon" style="grid-column-start: middle; margin-left: 2.5px; grid-column-end: end; overflow-x: hidden;">
+											Confirm
+										</button>
+									</div>
+								{/if}
+							</div>
 					</div>
-				</div>
+				{/if}
 			{/each}
 		{/if}
 
@@ -422,11 +596,6 @@
 	<div class="caol"></div>
 {/if}
 <style>
-	h1 {
-		color: purple;
-		font-weight: bold;
-	}
-
 	h3 {
 		color: purple;
 		font-weight: bold;
@@ -490,7 +659,7 @@
 	}
 
 	.task {
-		padding: 5px;
+		padding: 10px;
 		margin: 5px;
 		text-align: left;
 		background-color: lemonchiffon;
@@ -503,7 +672,12 @@
 
 	.tasktitle {
 		font-weight: bold; 
+		font-size: 1.1em;
 		color: purple;
+	}
+
+	.tasktitle:hover {
+		color: deeppink;
 	}
 
 	.taskdate {
@@ -523,12 +697,28 @@
 		padding: 5px;
 	}
 
+	a {
+		background-color: lightgreen;
+		border-style: solid;
+		border-color: purple;
+		color: purple; 
+		border-width: 2px;
+		padding: 5px;
+		text-decoration: none;
+		font-size: 14px;
+	}
+
 	input:hover {
 		border-color: deeppink;
 		color: deeppink;
 	}
 
 	button:hover {
+		border-color: deeppink;
+		color: deeppink;
+	}
+
+	a:hover {
 		border-color: deeppink;
 		color: deeppink;
 	}
@@ -580,6 +770,10 @@
 		padding: 10px;
 	}
 
+	.salmon {
+		background: salmon;
+	}
+
 	.cateLabel {
 		font-style: italic;
 		font-size: 12px;
@@ -616,11 +810,5 @@
 
 	div {
 		overflow-x: hidden;
-	}
-
-	input.half {
-		grid-column-start: middle; 
-		grid-column-end: end; 
-		margin-left: 5px;
 	}
 </style>

@@ -1,6 +1,6 @@
 <script lang="ts">
-	export let colorDialog
 	let isOpen: boolean = false;
+	export let sortByDialog
 	export function openDialog() {
 		if (isOpen === false) {
 			isOpen = true
@@ -13,7 +13,7 @@
 	}
 </script>
 {#if isOpen === true}
-	<div bind:this={colorDialog} class="dialog">
+	<div bind:this={sortByDialog} class="dialog">
 		<slot/>
 	</div>
 {/if}
@@ -28,9 +28,9 @@
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: center;
+		margin: 5px;
 		margin-bottom: 10px;
 		max-height: 80px;
 		overflow-y: scroll;
-		width: 100%;
 	}
 </style>
