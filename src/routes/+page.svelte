@@ -156,9 +156,9 @@
 
 	function selectColor(selected: number) {
 		colorNumber = selected
-		colorOpen = false
+		colorsOpen = false
 		colorDialog.closeDialog()
-		addColorDialog.closeDialog()
+		addColDialog.closeDialog()
 	}
 
 	function completed(selected: number) {
@@ -475,14 +475,12 @@
 				<div class="yippee">
 					<span class="message">all done!</span>
 				</div>
-			{:else if sortNumber > -1 && months.filter(obj => obj["category"] === sortNumber).length < 1}
-			<div class="dawg">
+			{:else if sortNumber > -1 && months.filter(obj => obj["category"] === sortNumber).length === 0}
 				<div class="dawg">
 					<span class="message">
-						we do not have any of these "{categories[sortNumber].name}" items of which you speak, i'm afraid...
+						we do not have any of these items of which you speak, i'm afraid...
 					</span>
 				</div>
-			</div>
 			{:else}
 				{#each months as { submission, description, date, category }, i}
 				<!--TASK-->
@@ -525,10 +523,10 @@
 						no completed tasks here 👍
 					</span>
 				</div>
-			{:else if sortNumber > -1 && months.filter(obj => obj["category"] === sortNumber).length < 1}
+			{:else if sortNumber > -1 && completedtasks.filter(obj => obj["category"] === sortNumber).length === 0}
 				<div class="dawg">
 					<span class="message">
-						we do not have any of these "{categories[sortNumber].name}" items of which you speak, i'm afraid...
+						we do not have any of these items of which you speak, i'm afraid...
 					</span>
 				</div>
 			{:else}
