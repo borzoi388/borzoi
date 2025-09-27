@@ -177,6 +177,7 @@
 		]
 		months.splice(selected, 1)
 		months = months
+		completedtasks = completedtasks
 	}
 
 	function deleteComp(selected: number) {
@@ -411,7 +412,9 @@
 
 	<section class="middle">
 		<div class="middle border">
-			<div class="title"></div>
+			<div class="shark">
+				<div class="title"></div>
+			</div>
 			<div class="container">
 
 				<button on:click={toggleShowCom} class="pink">
@@ -468,9 +471,19 @@
 			</SortByDialog>
 
 		{#if showCompleted === false}
-
-			{#if months.length >= 1}
-				
+			{#if months.length < 1}
+				<div class="yippee">
+					<span class="message">all done!</span>
+				</div>
+			{:else if sortNumber > -1 && months.filter(obj => obj["category"] === sortNumber).length < 1}
+			<div class="dawg">
+				<div class="dawg">
+					<span class="message">
+						we do not have any of these "{categories[sortNumber].name}" items of which you speak, i'm afraid...
+					</span>
+				</div>
+			</div>
+			{:else}
 				{#each months as { submission, description, date, category }, i}
 				<!--TASK-->
 					{#if sortNumber < 0 || sortNumber === category}
@@ -504,73 +517,82 @@
 						</div>
 					{/if}
 				{/each}
-			{:else}
-				<div class="yippee">
-					<h3>all done!</h3>
-				</div>
 			{/if}
 		{:else}
-			
-			{#each completedtasks as { submission, description, date, category }, i}
-				{#if sortNumber < 0 || sortNumber === category}
-					<div class="task">
-						<!--CATEGORY OF TASK-->
-						<div class="half" style="grid-column-start: check; grid-column-end: end; margin-bottom: 5px;">
-							<div class="border cateLabel" style="background-color: {colors[categories[category].color].color}; color: {colors[categories[category].color].text}; margin-bottom: 2.5px">
-								{categories[category].name}
-							</div>
+			{#if completedtasks.length < 1}
+				<div class="cat">
+					<span class="message">
+						no completed tasks here 👍
+					</span>
+				</div>
+			{:else if sortNumber > -1 && months.filter(obj => obj["category"] === sortNumber).length < 1}
+				<div class="dawg">
+					<span class="message">
+						we do not have any of these "{categories[sortNumber].name}" items of which you speak, i'm afraid...
+					</span>
+				</div>
+			{:else}
+				{#each completedtasks as { submission, description, date, category }, i}
+					{#if sortNumber < 0 || sortNumber === category}
+						<div class="task">
+							<!--CATEGORY OF TASK-->
+							<div class="half" style="grid-column-start: check; grid-column-end: end; margin-bottom: 5px;">
+								<div class="border cateLabel" style="background-color: {colors[categories[category].color].color}; color: {colors[categories[category].color].text}; margin-bottom: 2.5px">
+									{categories[category].name}
+								</div>
 
-							<!--TITLE OF TASK-->
-							<div class="green border" style="grid-column-start: col2; grid-column-end: end; margin-left: 5px; padding: 5px; margin-bottom: 2.5px;">
-								<span class="tasktitle">
-									{submission}
-								</span>
-								<span class="taskdate">
-									- {date}
-								</span>
-							</div>
+								<!--TITLE OF TASK-->
+								<div class="green border" style="grid-column-start: col2; grid-column-end: end; margin-left: 5px; padding: 5px; margin-bottom: 2.5px;">
+									<span class="tasktitle">
+										{submission}
+									</span>
+									<span class="taskdate">
+										- {date}
+									</span>
+								</div>
 
-							<!--DESCRIPTION OF TASK-->
-							{#if description.length > 0}
-								<p class="text" style="grid-column-start: col1; grid-column-end: end;">
-									{description}
-								</p>
-							{/if}
-							
-						</div>
-							<div class="half" style="grid-column-start: check; grid-column-end: end">
-								{#if compButtonStates[i].restore === false}
-									<button on:click={() => restoreTask(i)} style="grid-column-start: col1; margin-right: 2.5px; grid-column-end: middle; overflow-x: hidden;">
-										Restore Task
-									</button>
-								{:else}
-									<div class="half" style="grid-column-start: col1; grid-column-end: middle; margin-right: 2.5px;">
-										<button on:click={() => cancelRestore(i)} style="grid-column-start: col1; margin-right: 2.5px; grid-column-end: middle; overflow-x: hidden;">
-											Cancel
-										</button>
-										<button on:click={() => restoreTask(i)} style="grid-column-start: middle; margin-left: 2.5px; grid-column-end: end; overflow-x: hidden;">
-											Confirm
-										</button>
-									</div>
+								<!--DESCRIPTION OF TASK-->
+								{#if description.length > 0}
+									<p class="text" style="grid-column-start: col1; grid-column-end: end;">
+										{description}
+									</p>
 								{/if}
-								{#if compButtonStates[i].delete === false}
-									<button on:click={() => deleteComp(i)} class="salmon" style="grid-column-start: middle; margin-left: 2.5px; grid-column-end: end; overflow-x: hidden;">
-										Delete Task
-									</button>
-								{:else}
-									<div class="half" style="grid-column-start: middle; grid-column-end: end; margin-left: 2.5px;">
-										<button on:click={() => cancelDelete(i)} class="salmon" style="grid-column-start: col1; margin-right: 2.5px; grid-column-end: middle; overflow-x: hidden;">
-											Cancel
+								
+							</div>
+								<div class="half" style="grid-column-start: check; grid-column-end: end">
+									{#if compButtonStates[i].restore === false}
+										<button on:click={() => restoreTask(i)} style="grid-column-start: col1; margin-right: 2.5px; grid-column-end: middle; overflow-x: hidden;">
+											Restore Task
 										</button>
+									{:else}
+										<div class="half" style="grid-column-start: col1; grid-column-end: middle; margin-right: 2.5px;">
+											<button on:click={() => cancelRestore(i)} style="grid-column-start: col1; margin-right: 2.5px; grid-column-end: middle; overflow-x: hidden;">
+												Cancel
+											</button>
+											<button on:click={() => restoreTask(i)} style="grid-column-start: middle; margin-left: 2.5px; grid-column-end: end; overflow-x: hidden;">
+												Confirm
+											</button>
+										</div>
+									{/if}
+									{#if compButtonStates[i].delete === false}
 										<button on:click={() => deleteComp(i)} class="salmon" style="grid-column-start: middle; margin-left: 2.5px; grid-column-end: end; overflow-x: hidden;">
-											Confirm
+											Delete Task
 										</button>
-									</div>
-								{/if}
-							</div>
-					</div>
-				{/if}
-			{/each}
+									{:else}
+										<div class="half" style="grid-column-start: middle; grid-column-end: end; margin-left: 2.5px;">
+											<button on:click={() => cancelDelete(i)} class="salmon" style="grid-column-start: col1; margin-right: 2.5px; grid-column-end: middle; overflow-x: hidden;">
+												Cancel
+											</button>
+											<button on:click={() => deleteComp(i)} class="salmon" style="grid-column-start: middle; margin-left: 2.5px; grid-column-end: end; overflow-x: hidden;">
+												Confirm
+											</button>
+										</div>
+									{/if}
+								</div>
+						</div>
+					{/if}
+				{/each}
+			{/if}
 		{/if}
 
 	</section>
@@ -635,6 +657,13 @@
 		color: black;
 		margin-bottom: 10px;
 		padding: 10px;
+	}
+
+	div.shark:hover{
+		background: url(src/lib/images/shark.gif);
+		background-size: contain;
+		background-repeat: repeat-x;
+		background-position: center;
 	}
 
 	section.todolist {
@@ -735,6 +764,13 @@
 		background-color: lightgreen;
 	}
 
+	span.message {
+		font-size: 1.1em;
+		color: palegreen;
+		font-style: italic;
+		background-color: purple;
+	}
+
 	.half {
 		display: grid;
 		grid-template-columns: [col1] 25% [col2] 25% [middle] 50% [end];
@@ -810,5 +846,23 @@
 
 	div {
 		overflow-x: hidden;
+	}
+
+	.dawg {
+		background: url(src/lib/images/dawg.jpg);
+		background-size: contain;
+		background-repeat: no-repeat;
+		background-position: center;
+		padding: 10px;
+		height: 300px;
+	}
+
+	.cat {
+		background: url(src/lib/images/cat.gif);
+		background-size: contain;
+		background-repeat: no-repeat;
+		background-position: center;
+		padding: 10px;
+		height: 300px;
 	}
 </style>
