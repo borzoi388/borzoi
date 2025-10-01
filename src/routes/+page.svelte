@@ -70,6 +70,7 @@
 	let colorsOpen: boolean = false
 	let sortOpen: boolean = false
 	let sortNumber: number = -1
+	let sortSearch: string = ""
 
 	function toggleColors() {
 		if (colorsOpen === false) {
@@ -130,7 +131,7 @@
 				{color: colorNumber, name: categorysubmission}
 			]
 			categorysubmission = ""
-			colorNumber = 0
+			colorNumber = 4
 			cateNumber = categories.length-1
 		}
 	}
@@ -442,15 +443,18 @@
 
 	</section>
 	<section class="todolist border" style="padding: 5px;">
+		<h3>
+			{#if showCompleted === false}
+				To-Do
+			{:else}
+				Completed
+			{/if}
+		</h3>
 			<div class="half">
-				<h3 style="grid-column-start: col1; grid-column-end: middle">
-					{#if showCompleted === false}
-						To-Do
-					{:else}
-						Completed
-					{/if}
-				</h3>
-				<div class="border" style="grid-column-start: middle; grid-column-end: end; background: lemonchiffon; margin: 5px; margin-left: 0px; align-content: center;">
+				<div class="border" style="grid-column-start: col1; grid-column-end: middle; background: lemonchiffon; margin: 5px; padding: 10px; display: flex; align-content: center;">
+					<input bind:value={sortSearch} placeholder="Search (leave empty to cancel)">
+				</div>
+				<div class="border" style="grid-column-start: middle; grid-column-end: end; background: lemonchiffon; margin: 5px; align-content: center; padding: 5px;">
 					<label class="text">
 						Filter:
 							{#if sortNumber > -1}
@@ -475,16 +479,24 @@
 				<div class="yippee">
 					<span class="message">all done!</span>
 				</div>
-			{:else if sortNumber > -1 && months.filter(obj => obj["category"] === sortNumber).length === 0}
+			{:else if (
+				(months.filter(obj => obj["category"] === sortNumber).length === 0 && sortNumber > -1) ||
+				(months.filter(obj => obj["submission"].toLowerCase().includes(sortSearch.toLowerCase())).length === 0 && sortSearch.length > 0)
+			)}
 				<div class="dawg">
 					<span class="message">
-						we do not have any of these items of which you speak, i'm afraid...
+						i cannor find them
 					</span>
 				</div>
 			{:else}
 				{#each months as { submission, description, date, category }, i}
 				<!--TASK-->
-					{#if sortNumber < 0 || sortNumber === category}
+					{#if 
+						(sortNumber < 0 && sortSearch.length < 1) || 
+						(sortNumber > -1 && sortNumber === category && sortSearch.length < 1) || 
+						(submission.toLowerCase().includes(sortSearch.toLowerCase()) && sortSearch.length > 0 && sortNumber < 0) || 
+						(sortNumber === category && sortNumber > -1 && submission.toLowerCase().includes(sortSearch.toLowerCase()) && sortSearch.length > 0)
+					}
 						<div class="task">
 							<button on:click={() => completed(i)} style="grid-column-start: check; grid-column-end: task">
 								✓
@@ -523,7 +535,10 @@
 						no completed tasks here 👍
 					</span>
 				</div>
-			{:else if sortNumber > -1 && completedtasks.filter(obj => obj["category"] === sortNumber).length === 0}
+				{:else if (
+					(completedtasks.filter(obj => obj["category"] === sortNumber).length === 0 && sortNumber > -1) ||
+					(completedtasks.filter(obj => obj["submission"].toLowerCase().includes(sortSearch.toLowerCase())).length === 0 && sortSearch.length > 0)
+				)}
 				<div class="dawg">
 					<span class="message">
 						we do not have any of these items of which you speak, i'm afraid...
@@ -531,7 +546,12 @@
 				</div>
 			{:else}
 				{#each completedtasks as { submission, description, date, category }, i}
-					{#if sortNumber < 0 || sortNumber === category}
+					{#if 
+						(sortNumber < 0 && sortSearch.length < 1) || 
+						(sortNumber > -1 && sortNumber === category && sortSearch.length < 1) || 
+						(submission.toLowerCase().includes(sortSearch.toLowerCase()) && sortSearch.length > 0 && sortNumber < 0) || 
+						(sortNumber === category && sortNumber > -1 && submission.toLowerCase().includes(sortSearch.toLowerCase()) && sortSearch.length > 0)
+					}
 						<div class="task">
 							<!--CATEGORY OF TASK-->
 							<div class="half" style="grid-column-start: check; grid-column-end: end; margin-bottom: 5px;">
@@ -771,7 +791,7 @@
 
 	.half {
 		display: grid;
-		grid-template-columns: [col1] 25% [col2] 25% [middle] 50% [end];
+		grid-template-columns: [col1] 25% [col2] 25% [middle] 25% [col3] 25% [end];
 	}
 
 	.yippee {
