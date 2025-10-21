@@ -49,6 +49,7 @@ div.shark:hover{
 section.todolist {
     background-color: lightpink;
     color: black;
+    margin-top: 10px;
     grid-column-start: col4;
     grid-column-end: end;
     grid-row-start: body;
