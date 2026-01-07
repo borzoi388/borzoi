@@ -5,14 +5,18 @@
 	let loggedin: string = "true"
 	let password: string = ""
 	let username: String
+
 	let cateNumber: number = 0
 	let colorNumber: number = 4
+
 	let colorSubmission: string = ""
 	let addColorState: string = "colorPick"
-	let sdate: Date = new Date()
 	let showCustom: boolean = false
-	let months: Array<{submission: string, description: string, date: Date, category: number}> = [
-		{ submission: "Mark this as complete", description: "Very difficult task", date: sdate, category: 0 }
+
+	let sdate: Date = new Date()
+
+	let months: Array<{submission: string, description: string, date: Date, category: number, important: boolean}> = [
+		{ submission: "Mark this as complete", description: "Very difficult task", date: sdate, category: 0, important: false }
 	]
 
 	let compButtonStates: Array<{restore: boolean, delete: boolean}> = [
@@ -23,8 +27,8 @@
 		{ color: 25, name: "Unsorted" },
 	]
 
-	let completedtasks: Array<{submission: string, description: string, date: Date, category: number}> = [
-		{ submission: "Completed task 1", description: "It's already complete", date: sdate, category: 0 }
+	let completedtasks: Array<{submission: string, description: string, date: Date, category: number, important: boolean}> = [
+		{ submission: "Completed task 1", description: "It's already complete", date: sdate, category: 0, important: false }
 	]
 
 	//i'm sorry for this horrific block of an array but i don't know how to import data yet 😝
@@ -33,7 +37,7 @@
             { color: "PeachPuff", text: "purple", custom: false},
             { color: "PapayaWhip", text: "purple", custom: false},
             { color: "PaleGreen", text: "purple", custom: false},
-            { color: "PaleTurquoise", text: "purple", custom: false},
+            { color: "PaleTurquoise", text: "pu rple", custom: false},
             { color: "LightSkyBlue", text: "purple", custom: false},
             { color: "Plum", text: "purple", custom: false},
             { color: "LightPink", text: "purple", custom: false},
@@ -63,12 +67,21 @@
 
 	let tasksubmission: string = ""
 	let taskdescription: string = ""
+	let isImportant: boolean = false
+
 	let categorysubmission: string = ""
+
 	let showCompleted: boolean = false
 	let showCaol: boolean = false
+
 	let textDark: boolean = true
+
 	let colorsOpen: boolean = false
 	let sortOpen: boolean = false
+	let cateOpen: boolean = false
+	let addColsOpen: boolean = false
+	let addCateOpen: boolean = false;
+
 	let sortNumber: number = -1
 	let sortSearch: string = ""
 
@@ -79,6 +92,33 @@
 		} else {
 			colorsOpen = false
 			colorDialog.closeDialog()
+			addColDialog.closeDialog()
+			addColsOpen = false
+		}
+	}
+
+	function toggleAddCate() {
+		if (addCateOpen === false) {
+			addCateOpen = true
+			submitDialog.openDialog()
+		} else {
+			addCateOpen = false
+			submitDialog.closeDialog()
+			addColDialog.closeDialog()
+			addColsOpen = false
+			colorDialog.closeDialog()
+			colorsOpen = false;
+		}
+	}
+
+	function toggleAddColors() {
+		if (!addColsOpen) {
+			addColsOpen = true;
+			addColDialog.openDialog()
+		} else {
+			addColsOpen = false;
+			addColDialog.closeDialog()
+
 		}
 	}
 
@@ -91,6 +131,26 @@
 			sortByDialog.closeDialog()
 		}
 	}
+
+	function toggleOpenCate() {
+		if (cateOpen === false) {
+			cateOpen = true
+			selectDialog.openDialog()
+		} else {
+			cateOpen = false
+			selectDialog.closeDialog()
+			addColDialog.closeDialog()
+			addColsOpen = false
+			colorDialog.closeDialog()
+			colorsOpen = false
+			submitDialog.closeDialog()
+			addCateOpen = false
+		}
+	}
+
+	function toggleImportant() {
+		isImportant = !isImportant;
+	}
 	
 	function addmonth() {
 		if (tasksubmission.length < 1) {
@@ -99,7 +159,7 @@
 			sdate = new Date()
 			months = [
 				...months,
-				{ submission: tasksubmission, description: taskdescription, date: sdate, category: cateNumber, }
+				{ submission: tasksubmission, description: taskdescription, date: sdate, category: cateNumber, important: isImportant }
 			]
 			showCompleted = false
 			tasksubmission = ""
@@ -125,7 +185,12 @@
 			alert("Too long! Please keep it under 18 characters")
 		} else {
 			submitDialog.closeDialog()
+			addCateOpen = false
+
 			addColDialog.closeDialog()
+			addColsOpen = false
+			colorDialog.closeDialog()
+			colorsOpen = false
 			categories = [
 				...categories,
 				{color: colorNumber, name: categorysubmission}
@@ -146,7 +211,12 @@
 
 	function selectCate(selected: number) {
 		cateNumber = selected
-		selectDialog.closeDialog()
+		toggleOpenCate()
+		console.log("sdffda")
+		addColorDialog.closeDialog()
+		addColsOpen = false
+		colorDialog.closeDialog()
+		colorsOpen = false
 	}
 
 	function sortCate(selected: number) {
@@ -160,6 +230,7 @@
 		colorsOpen = false
 		colorDialog.closeDialog()
 		addColDialog.closeDialog()
+		addColsOpen = false
 	}
 
 	function completed(selected: number) {
@@ -169,7 +240,8 @@
 				submission: months[selected].submission, 
 				description: months[selected].description, 
 				date: new Date(), 
-				category: months[selected].category 
+				category: months[selected].category,
+				important: months[selected].important 
 			}
 		]
 		compButtonStates = [
@@ -199,7 +271,8 @@
 					submission: completedtasks[selected].submission, 
 					description: completedtasks[selected].description, 
 					date: completedtasks[selected].date, 
-					category: completedtasks[selected].category 
+					category: completedtasks[selected].category,
+					important: completedtasks[selected].important
 				}
 			]
 			completedtasks.splice(selected, 1)
@@ -313,9 +386,9 @@
 			<br>
 			<div style="display: block; width: 100%">
 				<label class="text">Category:
-					<button on:click={() => selectDialog.openDialog()} style="margin-bottom: 10px; background-color: {colors[categories[cateNumber].color].color}; color: {colors[categories[cateNumber].color].text}">
+					<button on:click={toggleOpenCate} style="margin-bottom: 10px; background-color: {colors[categories[cateNumber].color].color}; color: {colors[categories[cateNumber].color].text}">
 						{categories[cateNumber].name}
-					</button><br>
+					</button>
 				</label>
 			</div>
 			<!--CATEGORY CHOOSE-->
@@ -323,8 +396,15 @@
 				{#each categories as { color, name }, i}
 					<button on:click={() => selectCate(i)} style="background-color: {colors[color].color}; margin: 5px; color: {colors[color].text}">{name}</button>
 				{/each}
-				<button on:click={submitDialog.openDialog} style="margin: 5px; background-color: transparent">＋</button>
+				<button on:click={toggleAddCate} style="margin: 5px; background-color: transparent">＋</button>
 			</Dialog>
+			<div style="display: block; width: 100%; margin-bottom: 10px">
+				<label class="text">Important:
+					<button on:click={toggleImportant}>
+						{isImportant}
+					</button>
+				</label>
+			</div>
 			<button on:click={addmonth} style="display: block">
 				Submit
 			</button>
@@ -369,7 +449,7 @@
 							{/if}
 						{/each}
 					{/if}
-					<button on:click={addColDialog.openDialog} style="margin: 5px; background-color: transparent">＋</button>
+					<button on:click={toggleAddColors} style="margin: 5px; background-color: transparent">＋</button>
 				</ColDialog>
 				<button on:click={addCate}>
 					Submit
@@ -489,42 +569,89 @@
 					</span>
 				</div>
 			{:else}
-				{#each months as { submission, description, date, category }, i}
+			{#each months as { submission, description, date, category, important }, i}
 				<!--TASK-->
-					{#if 
-						(sortNumber < 0 && sortSearch.length < 1) || 
-						(sortNumber > -1 && sortNumber === category && sortSearch.length < 1) || 
-						(submission.toLowerCase().includes(sortSearch.toLowerCase()) && sortSearch.length > 0 && sortNumber < 0) || 
-						(sortNumber === category && sortNumber > -1 && submission.toLowerCase().includes(sortSearch.toLowerCase()) && sortSearch.length > 0)
-					}
-						<div class="task">
-							<button on:click={() => completed(i)} style="grid-column-start: check; grid-column-end: task">
-								✓
-							</button>
-							<!--CATEGORY OF TASK-->
-							<div class="half" style="grid-column-start: category; grid-column-end: end; margin-left: 10px">
-								<div class="border cateLabel" style="background-color: {colors[categories[category].color].color}; color: {colors[categories[category].color].text}">
-									{categories[category].name}
-								</div>
+				{#if (important)} 
+						{#if 
+							(sortNumber < 0 && sortSearch.length < 1) || 
+							(sortNumber > -1 && sortNumber === category && sortSearch.length < 1) || 
+							(submission.toLowerCase().includes(sortSearch.toLowerCase()) && sortSearch.length > 0 && sortNumber < 0) || 
+							(sortNumber === category && sortNumber > -1 && submission.toLowerCase().includes(sortSearch.toLowerCase()) && sortSearch.length > 0)
+						}
+							<div class="task">
+								<button on:click={() => completed(i)} style="grid-column-start: check; grid-column-end: task">
+									✓
+								</button>
+								<!--CATEGORY OF TASK-->
+								<div class="half" style="grid-column-start: category; grid-column-end: end; margin-left: 10px">
+									<div class="border cateLabel" style="background-color: {colors[categories[category].color].color}; color: {colors[categories[category].color].text}">
+										{categories[category].name}
+									</div>
 
-								<!--TITLE OF TASK-->
-								<div class="green border" style="grid-column-start: col2; grid-column-end: end; margin-left: 5px; padding: 5px;">
-									<span class="tasktitle">
-										{submission}
-									</span>
-									<span class="taskdate">
-										- {date}
-									</span>
-								</div>
+									<!--TITLE OF TASK-->
+									<div class="green border" style="grid-column-start: col2; grid-column-end: end; margin-left: 5px; padding: 5px;">
+										<div style="padding: 5px; float: left">
+											!!
+										</div>
+										<div style="float: left">
+											<span class="tasktitle">
+												{submission}
+											</span>
+											<span class="taskdate">
+												- {date}
+											</span>
+										</div>
+									</div>
 
-								<!--DESCRIPTION OF TASK-->
-								{#if description.length > 0}
-									<p class="text" style="grid-column-start: col1; grid-column-end: end">
-										{description}
-									</p>
-								{/if}
+									<!--DESCRIPTION OF TASK-->
+									{#if description.length > 0}
+										<p class="text" style="grid-column-start: col1; grid-column-end: end">
+											{description}
+										</p>
+									{/if}
+								</div>
 							</div>
-						</div>
+						{/if}
+						{/if}
+					{/each}
+				{#each months as { submission, description, date, category, important }, i}
+				<!--TASK-->
+					{#if (!important)}
+						{#if 
+							(sortNumber < 0 && sortSearch.length < 1) || 
+							(sortNumber > -1 && sortNumber === category && sortSearch.length < 1) || 
+							(submission.toLowerCase().includes(sortSearch.toLowerCase()) && sortSearch.length > 0 && sortNumber < 0) || 
+							(sortNumber === category && sortNumber > -1 && submission.toLowerCase().includes(sortSearch.toLowerCase()) && sortSearch.length > 0)
+						}
+							<div class="task">
+								<button on:click={() => completed(i)} style="grid-column-start: check; grid-column-end: task">
+									✓
+								</button>
+								<!--CATEGORY OF TASK-->
+								<div class="half" style="grid-column-start: category; grid-column-end: end; margin-left: 10px">
+									<div class="border cateLabel" style="background-color: {colors[categories[category].color].color}; color: {colors[categories[category].color].text}">
+										{categories[category].name}
+									</div>
+
+									<!--TITLE OF TASK-->
+									<div class="green border" style="grid-column-start: col2; grid-column-end: end; margin-left: 5px; padding: 5px;">
+										<span class="tasktitle">
+											{submission}
+										</span>
+										<span class="taskdate">
+											- {date}
+										</span>
+									</div>
+
+									<!--DESCRIPTION OF TASK-->
+									{#if description.length > 0}
+										<p class="text" style="grid-column-start: col1; grid-column-end: end">
+											{description}
+										</p>
+									{/if}
+								</div>
+							</div>
+						{/if}
 					{/if}
 				{/each}
 			{/if}

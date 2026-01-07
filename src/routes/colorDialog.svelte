@@ -2,11 +2,7 @@
 	export let colorDialog
 	let isOpen: boolean = false;
 	export function openDialog() {
-		if (isOpen === false) {
-			isOpen = true
-		} else {
-			isOpen = false
-		}
+		isOpen = true
 	}
 	export function closeDialog() {
 		isOpen = false
