@@ -100,10 +100,10 @@
 	function toggleAddCate() {
 		if (addCateOpen === false) {
 			addCateOpen = true
-			submitDialog.openDialog()
+			addCateDialog.openDialog()
 		} else {
 			addCateOpen = false
-			submitDialog.closeDialog()
+			addCateDialog.closeDialog()
 			addColDialog.closeDialog()
 			addColsOpen = false
 			colorDialog.closeDialog()
@@ -143,7 +143,7 @@
 			addColsOpen = false
 			colorDialog.closeDialog()
 			colorsOpen = false
-			submitDialog.closeDialog()
+			addCateDialog.closeDialog()
 			addCateOpen = false
 		}
 	}
@@ -185,7 +185,7 @@
 		} else if (categorysubmission.length > 18) {
 			alert("Too long! Please keep it under 18 characters")
 		} else {
-			submitDialog.closeDialog()
+			addCateDialog.closeDialog()
 			addCateOpen = false
 
 			addColDialog.closeDialog()
@@ -361,12 +361,12 @@
 
 	import Dialog from './selectDialog.svelte'
 	import ColDialog from './colorDialog.svelte'
-    import SubmitDialog from './submitDialog.svelte'
+    import AddCateDialog from './addCateDialog.svelte'
 	import AddColDialog from './addColorDialog.svelte'
 	import SortByDialog from './sortByDialog.svelte'
 	let sortByDialog: undefined
 	let addColDialog: undefined
-	let submitDialog: undefined
+	let addCateDialog: undefined
 	let colorDialog: undefined
 	let selectDialog: undefined
 </script>
@@ -411,7 +411,7 @@
 			</button>
 		</div>
 
-		<SubmitDialog bind:this={submitDialog}>
+		<AddCateDialog bind:this={addCateDialog}>
 			<!--ADD CATEGORY-->
 				<input bind:value={categorysubmission} type="text" placeholder="New Category Name">
 				<div class="half" style="width: 100%; margin-bottom: 10px">
@@ -455,7 +455,7 @@
 				<button on:click={addCate}>
 					Submit
 				</button>
-		</SubmitDialog>
+		</AddCateDialog>
 
 		<AddColDialog bind:this={addColDialog}>
 			<!--ADD COLOR-->
@@ -506,18 +506,6 @@
 						Hide Completed Tasks
 					{/if}
 				</button>
-
-				<button on:click={toggleShowCaol} class="pink">
-					{#if showCaol === true}
-						Hide Cat Owl Guardian
-					{:else}
-						Show Cat Owl Guardian
-					{/if}
-				</button>
-
-				<a href="https://www.youtube.com/watch?v=WCs-7HmA9Qk" target="blank" class="pink">
-					Seal Cave
-				</a>
 
 			</div>
 		</div>
