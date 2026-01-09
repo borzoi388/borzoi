@@ -28,5 +28,6 @@
 		margin-bottom: 10px;
 		max-height: 80px;
 		overflow-y: scroll;
+		box-shadow:none;
 	}
 </style>

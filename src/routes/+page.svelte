@@ -165,6 +165,7 @@
 			tasksubmission = ""
 			taskdescription = ""
 			cateNumber = 0
+			isImportant = false
 		}
 
 	}
@@ -398,7 +399,7 @@
 				{/each}
 				<button on:click={toggleAddCate} style="margin: 5px; background-color: transparent">＋</button>
 			</Dialog>
-			<div style="display: block; width: 100%; margin-bottom: 10px">
+			<div style="display: block; width: 100%; margin-bottom: 10px; overflow:visible">
 				<label class="text">Important:
 					<button on:click={toggleImportant}>
 						{isImportant}
@@ -471,8 +472,8 @@
 					</button>
 				</div>
 			{:else}
-				<input type="text" bind:value={colorSubmission} placeholder="Input CSS Color/hex value">
-				<div class="half" style="width: 100%">
+				<input type="text" bind:value={colorSubmission} placeholder="Input CSS Color/hex value (include #)">
+				<div class="half" style="width: 100%; overflow: visible">
 					<button on:click={toggleColorPick} style="grid-column-start: col1; grid-column-end: middle; margin-right: 5px">Pick Color?</button>
 					<button on:click={toggleTextColor} style="grid-column-start: middle; grid-column-end: end; margin-left: 5px; background-color: {colorSubmission}">
 						{#if textDark === true}
@@ -522,14 +523,15 @@
 		</div>
 
 	</section>
-	<section class="todolist border" style="padding: 5px;">
-		<h3>
-			{#if showCompleted === false}
-				To-Do
-			{:else}
-				Completed
-			{/if}
-		</h3>
+	<section class="todolist">
+		<div class="todolist border" style="padding: 5px; margin-bottom: 10px">
+			<h3>
+				{#if showCompleted === false}
+					To-Do
+				{:else}
+					Completed
+				{/if}
+			</h3>
 			<div class="half">
 				<div class="border" style="grid-column-start: col1; grid-column-end: middle; background: lemonchiffon; margin: 5px; padding: 10px; display: flex; align-content: center;">
 					<input bind:value={sortSearch} placeholder="Search (leave empty to cancel)">
@@ -553,7 +555,9 @@
 					<button on:click={() => sortCate(i)} style="background-color: {colors[color].color}; margin: 5px; color: {colors[color].text}">{name}</button>
 				{/each}
 			</SortByDialog>
+		</div>
 
+	<div class="todolist border" style="padding: 5px; max-height: 70vh; overflow-y: scroll">
 		{#if showCompleted === false}
 			{#if months.length < 1}
 				<div class="yippee">
@@ -589,11 +593,11 @@
 									</div>
 
 									<!--TITLE OF TASK-->
-									<div class="green border" style="grid-column-start: col2; grid-column-end: end; margin-left: 5px; padding: 5px;">
-										<div style="padding: 5px; float: left">
-											!!
-										</div>
-										<div style="float: left">
+									<div class="green border important" style="grid-column-start: col2; grid-column-end: end; margin-left: 5px; padding: 5px;">
+										<button class="pink" style="grid-column-start: start; grid-column-end: middle; margin-right: 5px">
+											‼️
+										</button>
+										<div style="grid-column-start: middle; grid-column-end: end">
 											<span class="tasktitle">
 												{submission}
 											</span>
@@ -734,12 +738,12 @@
 										</div>
 									{/if}
 								</div>
-						</div>
-					{/if}
-				{/each}
+							</div>
+						{/if}
+					{/each}
+				{/if}
 			{/if}
-		{/if}
-
+		</div>
 	</section>
 {:else}
 	<section class="loginpage border" style="padding: 5px;">
@@ -760,5 +764,7 @@
 	</section>
 {/if}
 {#if showCaol === true}
-	<div class="caol"></div>
+	<div class="caol">
+		<div class="glow"></div>
+	</div>
 {/if}
