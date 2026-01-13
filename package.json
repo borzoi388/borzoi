@@ -30,6 +30,7 @@
   "module": "index.ts",
   "dependencies": {
     "@sveltejs/adapter-static": "^3.0.10",
+    "manifest.json": "^1.2.0",
     "test-app": "."
   }
 }
