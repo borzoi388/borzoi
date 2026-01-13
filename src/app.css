@@ -96,9 +96,6 @@ div.todolist {
     transition: color 0.2s;
 }
 
-.taskdate {
-    color: purple;
-}
 
 .text {
     font-style: italic;
@@ -135,8 +132,12 @@ input {
     border-style: solid;
     border-color: purple;
     margin-bottom: 10px;
+    color: purple;
     width: 100%;
     transition: border-color 0.2s, color 0.2s;
+    box-sizing: border-box;
+     -webkit-box-sizing:border-box;
+     -moz-box-sizing: border-box;
 }
 
 .green {

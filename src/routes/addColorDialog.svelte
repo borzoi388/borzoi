@@ -25,6 +25,5 @@
 		flex-wrap: wrap;
 		justify-content: center;
 		padding: 10px;
-		box-shadow: 2px 2px 0px purple;
 	}
 </style>

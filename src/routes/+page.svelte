@@ -13,12 +13,14 @@
 	let addColorState: string = "colorPick"
 	let showCustom: boolean = false
 
-	let sdate: Date = new Date()
+	let date: string | undefined
+	let time: string | undefined
 
-	let months: Array<{submission: string, description: string, date: Date, category: number, important: boolean}> = [
-		{ submission: "Mark this as complete", description: "Very difficult task", date: sdate, category: 0, important: false }
+	type Task = {submission: string, description: string, date: Date | undefined, category: number, important: boolean; index: number}
+
+	let months: Array<Task> = [
+		{ submission: "Mark this as complete", description: "Very difficult task", date: undefined, category: 0, important: false, index: 0 }
 	]
-
 	let compButtonStates: Array<{restore: boolean, delete: boolean}> = [
 		{ restore: false, delete: false }
 	]
@@ -27,8 +29,8 @@
 		{ color: 25, name: "Unsorted" },
 	]
 
-	let completedtasks: Array<{submission: string, description: string, date: Date, category: number, important: boolean}> = [
-		{ submission: "Completed task 1", description: "It's already complete", date: sdate, category: 0, important: false }
+	let completedtasks: Array<{submission: string, description: string, date: Date | undefined, category: number, important: boolean}> = [
+		{ submission: "Completed task 1", description: "It's already complete", date: undefined, category: 0, important: false }
 	]
 
 	//i'm sorry for this horrific block of an array but i don't know how to import data yet 😝
@@ -72,7 +74,6 @@
 	let categorysubmission: string = ""
 
 	let showCompleted: boolean = false
-	let showCaol: boolean = false
 
 	let textDark: boolean = true
 
@@ -84,6 +85,51 @@
 
 	let sortNumber: number = -1
 	let sortSearch: string = ""
+
+	function dateSortTasks() {
+		for (let taskToAdd = 0; taskToAdd < months.length; taskToAdd++) {
+			let mostRecent: number = taskToAdd;
+			for (let i = taskToAdd; i < months.length; i++) {
+				if (!months[i].date && !months[mostRecent].date && months[i].index < months[mostRecent].index) {
+					mostRecent = i;
+					console.log(months[i].index+" < "+months[mostRecent].index)
+				} else if ((months[i].date < months[mostRecent].date) || (!months[mostRecent].date && months[i].date)) {
+					mostRecent = i;
+				}
+			}
+			months[taskToAdd] = replace(mostRecent, taskToAdd)
+		}
+	}
+
+	function replace(replacedIndex: number, newIndex: number): Task {
+		console.log("replaced "+months[replacedIndex].submission+" at index "+replacedIndex+" with "+months[newIndex].submission+" at index "+newIndex)
+		let temp = months[replacedIndex]
+		months[replacedIndex] = months[newIndex]
+		return temp
+	}
+
+	function indexSortTasks() {
+		for (let taskToAdd = 0; taskToAdd < months.length; taskToAdd++) {
+			let mostRecent: number = taskToAdd;
+			for (let i = taskToAdd; i < months.length; i++) {
+				if (months[i].index < months[mostRecent].index) {
+					mostRecent = i;
+				}
+			}
+			months[taskToAdd] = replace(mostRecent, taskToAdd)
+		}
+	}
+
+	let isSortingByDate: boolean = false
+
+	function toggleSortByDate() {
+		if (isSortingByDate) {
+			indexSortTasks();
+		} else {
+			dateSortTasks();
+		}
+		isSortingByDate = !isSortingByDate;
+	}
 
 	function toggleColors() {
 		if (colorsOpen === false) {
@@ -151,21 +197,54 @@
 	function toggleImportant() {
 		isImportant = !isImportant;
 	}
+
+	function getDate(): Date | undefined {
+		let currentDate: Date = new Date();
+		let tempTime: string;
+		let tempDate: string;
+		let tempCurrDay: string = currentDate.getDate().toString();
+		let tempCurrMonth: string = (currentDate.getMonth()+1).toString();
+		if (!time && !date) return undefined;
+		if (!time) {
+			tempTime = "11:59:00"
+		} else {
+			tempTime = time.concat(":00");
+		}
+		if (tempCurrDay.length == 1) {
+			tempCurrDay = "0".concat(tempCurrDay)
+		}
+		if (tempCurrMonth.length == 1) {
+			tempCurrMonth = "0".concat(tempCurrMonth)
+		}
+		if (!date) {
+			tempDate = currentDate.getFullYear().toString().concat('-', tempCurrMonth, '-', tempCurrDay);
+		} else {
+			tempDate = date;
+		}
+		return new Date(tempDate.concat('T', tempTime));
+	}
 	
 	function addmonth() {
 		if (tasksubmission.length < 1) {
 			alert("Please input a title!")
 		} else {
-			sdate = new Date()
+			let tempDate = getDate();
+			if (tempDate && tempDate < new Date()) {alert("Please enter a valid date!")} else {
 			months = [
 				...months,
-				{ submission: tasksubmission, description: taskdescription, date: sdate, category: cateNumber, important: isImportant }
+				{ submission: tasksubmission, description: taskdescription, date: tempDate, category: cateNumber, important: isImportant, index: months.length }
 			]
+			date = undefined;
+			time = undefined;
 			showCompleted = false
 			tasksubmission = ""
 			taskdescription = ""
 			cateNumber = 0
 			isImportant = false
+				if (isSortingByDate) {
+					dateSortTasks();
+				}
+			}
 		}
 
 	}
@@ -273,7 +352,8 @@
 					description: completedtasks[selected].description, 
 					date: completedtasks[selected].date, 
 					category: completedtasks[selected].category,
-					important: completedtasks[selected].important
+					important: completedtasks[selected].important,
+					index: months.length
 				}
 			]
 			completedtasks.splice(selected, 1)
@@ -309,14 +389,6 @@
 		username = ""
 		loggedin = "false"
 		loggedin = loggedin
-	}
-
-	function toggleShowCaol() {
-		if (showCaol === true) {
-			showCaol = false
-		} else {
-			showCaol = true
-		}
 	}
 
 	function toggleShowCom() {
@@ -384,7 +456,16 @@
 			</h3>
 			<input bind:value={tasksubmission} type="text" placeholder="Task">
 			<input bind:value={taskdescription} type="text" placeholder="Description (optional)">
-			<br>
+			<span class="text" style="text-align: left; margin-bottom: 5px">Due: (optional)</span>
+			<div class="half" style="overflow: visible; width: 100%;">
+				<div style="grid-column-start: col1; grid-column-end: middle; padding-right: 2.5px">
+					<input bind:value={date} type="date">
+				</div>
+				<div style="grid-column-start: middle; grid-column-end: end; padding-left: 2.5px">
+					<input bind:value={time} type="time">
+				</div>
+			</div>
+
 			<div style="display: block; width: 100%">
 				<label class="text">Category:
 					<button on:click={toggleOpenCate} style="margin-bottom: 10px; background-color: {colors[categories[cateNumber].color].color}; color: {colors[categories[cateNumber].color].text}">
@@ -561,9 +642,12 @@
 					</span>
 				</div>
 			{:else}
-			{#each months as { submission, description, date, category, important }, i}
-				<!--TASK-->
-				{#if (important)} 
+				<button on:click={toggleSortByDate}>
+					{isSortingByDate ? 'Sort by creation date' : 'Sort by due date'}
+				</button>
+				{#each months as { submission, description, date, category, important }, i}
+					<!--TASK-->
+					{#if (important)} 
 						{#if 
 							(sortNumber < 0 && sortSearch.length < 1) || 
 							(sortNumber > -1 && sortNumber === category && sortSearch.length < 1) || 
@@ -575,7 +659,7 @@
 									✓
 								</button>
 								<!--CATEGORY OF TASK-->
-								<div class="half" style="grid-column-start: category; grid-column-end: end; margin-left: 10px">
+								<div class="half" style="grid-column-start: task; grid-column-end: end; margin-left: 10px; ">
 									<div class="border cateLabel" style="background-color: {colors[categories[category].color].color}; color: {colors[categories[category].color].text}">
 										{categories[category].name}
 									</div>
@@ -589,9 +673,17 @@
 											<span class="tasktitle">
 												{submission}
 											</span>
-											<span class="taskdate">
-												- {date}
-											</span>
+											{#if (date)}
+												{#if (date > new Date())}
+													<span style="color: purple">
+														- Due {date}
+													</span>
+												{:else}
+													<span style="color: salmon">
+														- ⚠️ Overdue {date}
+													</span>
+												{/if}
+											{/if}
 										</div>
 									</div>
 
@@ -620,7 +712,7 @@
 									✓
 								</button>
 								<!--CATEGORY OF TASK-->
-								<div class="half" style="grid-column-start: category; grid-column-end: end; margin-left: 10px">
+								<div class="half" style="grid-column-start: task; grid-column-end: end; margin-left: 10px">
 									<div class="border cateLabel" style="background-color: {colors[categories[category].color].color}; color: {colors[categories[category].color].text}">
 										{categories[category].name}
 									</div>
@@ -630,9 +722,17 @@
 										<span class="tasktitle">
 											{submission}
 										</span>
-										<span class="taskdate">
-											- {date}
-										</span>
+										{#if (date)}
+											{#if (date > new Date())}
+												<span style="color: purple">
+													- Due {date}
+												</span>
+											{:else}
+												<span style="color: salmon">
+													- ⚠️ Overdue {date}
+												</span>
+											{/if}
+										{/if}
 									</div>
 
 									<!--DESCRIPTION OF TASK-->
@@ -683,9 +783,17 @@
 									<span class="tasktitle">
 										{submission}
 									</span>
-									<span class="taskdate">
-										- {date}
-									</span>
+									{#if (date)}
+										{#if (date > new Date())}
+											<span style="color: purple">
+												- Due {date}
+											</span>
+										{:else}
+											<span style="color: salmon">
+												- ⚠️ Overdue {date}
+											</span>
+										{/if}
+									{/if}
 								</div>
 
 								<!--DESCRIPTION OF TASK-->
@@ -750,9 +858,4 @@
 			Log in
 		</button>
 	</section>
-{/if}
-{#if showCaol === true}
-	<div class="caol">
-		<div class="glow"></div>
-	</div>
 {/if}
