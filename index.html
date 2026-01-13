@@ -14,8 +14,17 @@
 	%sveltekit.head%
 </head>
 
-<body data-sveltekit-preload-data="hover" style="background-color:cadetblue; background: url(src/lib/images/bath.gif); background-size: cover; background-position: top">
-	<div style="display: contents">%sveltekit.body%</div>
+<script lang="ts">
+    import page from 'src/routes/+page.svelte'
+    function a() {
+        document.getElementById("fish").innerHTML = page
+    }
+</script>
+
+<body data-sveltekit-preload-data="hover" style="background-color:cadetblue; background: url(src/lib/images/bath.gif); background-size: cover; background-position: top" onload=a()>
+	<div class="fish" style="display: contents">
+        
+    </div>
 </body>
 
 </html>
