@@ -29,6 +29,7 @@
   "type": "module",
   "module": "index.ts",
   "dependencies": {
+    "@sveltejs/adapter-static": "^3.0.10",
     "test-app": "."
   }
 }
