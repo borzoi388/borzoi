@@ -1,4 +1,5 @@
 <script lang="ts">
+	let isFirstTime = true
 
 	const correctpassword: string = "Chickens"
 	const correctusername: string = "1540"
@@ -18,9 +19,7 @@
 
 	type Task = {submission: string, description: string, date: Date | undefined, category: number, important: boolean; index: number}
 
-	let months: Array<Task> = [
-		{ submission: "Mark this as complete", description: "Very difficult task", date: undefined, category: 0, important: false, index: 0 }
-	]
+	let months: Array<Task> = []
 	let compButtonStates: Array<{restore: boolean, delete: boolean}> = [
 		{ restore: false, delete: false }
 	]
@@ -29,9 +28,7 @@
 		{ color: 25, name: "Unsorted" },
 	]
 
-	let completedtasks: Array<{submission: string, description: string, date: Date | undefined, category: number, important: boolean}> = [
-		{ submission: "Completed task 1", description: "It's already complete", date: undefined, category: 0, important: false }
-	]
+	let completedtasks: Array<Task> = []
 
 	//i'm sorry for this horrific block of an array but i don't know how to import data yet 😝
 	let colors: Array<{color: string; text: string; custom: boolean}> = [
@@ -240,6 +237,7 @@
 			tasksubmission = ""
 			taskdescription = ""
 			cateNumber = 0
+			isFirstTime = false
 			isImportant = false
 				if (isSortingByDate) {
 					dateSortTasks();
@@ -316,13 +314,7 @@
 	function completed(selected: number) {
 		completedtasks = [
 			...completedtasks,
-			{ 
-				submission: months[selected].submission, 
-				description: months[selected].description, 
-				date: new Date(), 
-				category: months[selected].category,
-				important: months[selected].important 
-			}
+			months[selected],
 		]
 		compButtonStates = [
 			...compButtonStates,
@@ -627,7 +619,11 @@
 		</div>
 
 	<div class="todolist border" style="padding: 5px; max-height: 70vh; overflow-y: scroll">
-		{#if showCompleted === false}
+		{#if (isFirstTime)}
+			<div style="background: url(src/lib/images/blahaj.gif); background-size: contain; background-position: center; width: 100%; height: 200px; background-repeat: no-repeat">
+				<span class="message">Time to add a task! :3</span>
+			</div>
+		{:else if showCompleted === false}
 			{#if months.length < 1}
 				<div class="yippee">
 					<span class="message">all done!</span>
@@ -660,7 +656,7 @@
 								</button>
 								<!--CATEGORY OF TASK-->
 								<div class="half" style="grid-column-start: task; grid-column-end: end; margin-left: 10px; ">
-									<div class="border cateLabel" style="background-color: {colors[categories[category].color].color}; color: {colors[categories[category].color].text}">
+									<div class="border cateLabel" style="padding: 10px; background-color: {colors[categories[category].color].color}; color: {colors[categories[category].color].text}">
 										{categories[category].name}
 									</div>
 
@@ -669,7 +665,7 @@
 										<button class="pink" style="grid-column-start: start; grid-column-end: middle; margin-right: 5px">
 											‼️
 										</button>
-										<div style="grid-column-start: middle; grid-column-end: end">
+										<div style="grid-column-start: middle; grid-column-end: end; padding: 10px">
 											<span class="tasktitle">
 												{submission}
 											</span>
@@ -713,12 +709,12 @@
 								</button>
 								<!--CATEGORY OF TASK-->
 								<div class="half" style="grid-column-start: task; grid-column-end: end; margin-left: 10px">
-									<div class="border cateLabel" style="background-color: {colors[categories[category].color].color}; color: {colors[categories[category].color].text}">
+									<div class="border cateLabel" style="padding: 10px; background-color: {colors[categories[category].color].color}; color: {colors[categories[category].color].text}">
 										{categories[category].name}
 									</div>
 
 									<!--TITLE OF TASK-->
-									<div class="green border" style="grid-column-start: col2; grid-column-end: end; margin-left: 5px; padding: 5px;">
+									<div class="green border" style="grid-column-start: col2; grid-column-end: end; margin-left: 5px; padding: 10px">
 										<span class="tasktitle">
 											{submission}
 										</span>
@@ -774,12 +770,12 @@
 						<div class="task">
 							<!--CATEGORY OF TASK-->
 							<div class="half" style="grid-column-start: check; grid-column-end: end; margin-bottom: 5px;">
-								<div class="border cateLabel" style="background-color: {colors[categories[category].color].color}; color: {colors[categories[category].color].text}; margin-bottom: 2.5px">
+								<div class="border cateLabel" style="padding: 10px; background-color: {colors[categories[category].color].color}; color: {colors[categories[category].color].text}; margin-bottom: 2.5px">
 									{categories[category].name}
 								</div>
 
 								<!--TITLE OF TASK-->
-								<div class="green border" style="grid-column-start: col2; grid-column-end: end; margin-left: 5px; padding: 5px; margin-bottom: 2.5px;">
+								<div class="green border" style="padding: 10px; grid-column-start: col2; grid-column-end: end; margin-left: 5px; margin-bottom: 2.5px;">
 									<span class="tasktitle">
 										{submission}
 									</span>
