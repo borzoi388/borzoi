@@ -1,6 +1,3 @@
-	
-
-# Workflow to build and deploy a SvelteKit website to GitHub Pages
 name: Deploy static SvelteKit content to Pages
 
 on:
