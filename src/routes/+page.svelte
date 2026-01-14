@@ -1,6 +1,8 @@
 <script lang="ts">
 	let isFirstTime = true
 
+	export const page = this
+
 	const correctpassword: string = "Chickens"
 	const correctusername: string = "1540"
 	let loggedin: string = "true"
