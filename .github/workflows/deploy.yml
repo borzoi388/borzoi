@@ -12,10 +12,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install pnpm
+      - name: Install bun
         uses: oven-sh/setup-bun@v2
         with:
-          version: 8
+          bun-version: latest 
 
       - name: Install Node.js
         uses: actions/setup-node@v4
