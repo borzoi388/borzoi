@@ -235,3 +235,7 @@ span.message {
     display: grid;
     grid-template-columns: [start] 10% [middle] auto [end]
 }
+
+main {
+    background: url(./lib/images/bath.gif); background-size: cover; background-position: top
+}

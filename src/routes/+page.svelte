@@ -622,7 +622,7 @@
 
 	<div class="todolist border" style="padding: 5px; max-height: 70vh; overflow-y: scroll">
 		{#if (isFirstTime)}
-			<div style="background: url(src/lib/images/blahaj.gif); background-size: contain; background-position: center; width: 100%; height: 200px; background-repeat: no-repeat">
+			<div style="background: url(./lib/images/blahaj.gif); background-size: contain; background-position: center; width: 100%; height: 200px; background-repeat: no-repeat">
 				<span class="message">Time to add a task! :3</span>
 			</div>
 		{:else if showCompleted === false}
