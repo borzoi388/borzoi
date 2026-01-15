@@ -438,7 +438,7 @@
 </script>
 <svelte:head>
 	<title>🧼that was a good bath🧼</title>
-	<meta name="description" content="Svelte demo app" />
+	<meta name="description" content="funny app!!" />
 </svelte:head>
 {#if loggedin == "true"}
 	<section class="monthsubmission" style="padding: 0px">
