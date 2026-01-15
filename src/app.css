@@ -237,7 +237,7 @@ span.message {
 }
 
 .blahaj {
-    background: url(_app/immutable/assets/lib/images/blahaj.gif); 
+    background: url(./lib/images/blahaj.gif); 
     background-size: contain; 
     background-position: center; 
     width: 100%; 
@@ -246,7 +246,9 @@ span.message {
 }
 
 body {
-    background: url(_app/immutable/assets/lib/images/bath.gif); 
+    background: url(./lib/images/bath.gif); 
     background-size: cover; 
-    background-position: top
+    background-position: top;
+    width: 100vh;
+    height: 100vh;
 }
