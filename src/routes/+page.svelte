@@ -425,11 +425,11 @@
 		}
 	}
 
-	import Dialog from './selectDialog.svelte'
-	import ColDialog from './colorDialog.svelte'
-    import AddCateDialog from './addCateDialog.svelte'
-	import AddColDialog from './addColorDialog.svelte'
-	import SortByDialog from './sortByDialog.svelte'
+	import Dialog from './routes/dialogs/selectDialog.svelte'
+	import ColDialog from './routes/dialogs/colorDialog.svelte'
+    import AddCateDialog from './routes/dialogs/addCateDialog.svelte'
+	import AddColDialog from './routes/dialogs/addColorDialog.svelte'
+	import SortByDialog from './routes/dialogs/sortByDialog.svelte'
 	let sortByDialog: undefined
 	let addColDialog: undefined
 	let addCateDialog: undefined
@@ -622,7 +622,7 @@
 
 	<div class="todolist border" style="padding: 5px; max-height: 70vh; overflow-y: scroll">
 		{#if (isFirstTime)}
-			<div style="background: url(./lib/images/blahaj.gif); background-size: contain; background-position: center; width: 100%; height: 200px; background-repeat: no-repeat">
+			<div style="background: url(_app/immutable/assets/lib/images/blahaj.gif); background-size: contain; background-position: center; width: 100%; height: 200px; background-repeat: no-repeat">
 				<span class="message">Time to add a task! :3</span>
 			</div>
 		{:else if showCompleted === false}
