@@ -425,11 +425,11 @@
 		}
 	}
 
-	import Dialog from './routes/dialogs/selectDialog.svelte'
-	import ColDialog from './routes/dialogs/colorDialog.svelte'
-    import AddCateDialog from './routes/dialogs/addCateDialog.svelte'
-	import AddColDialog from './routes/dialogs/addColorDialog.svelte'
-	import SortByDialog from './routes/dialogs/sortByDialog.svelte'
+	import Dialog from './addCateDialog.svelte'
+	import ColDialog from './colorDialog.svelte'
+    import AddCateDialog from './addCateDialog.svelte'
+	import AddColDialog from './addColorDialog.svelte'
+	import SortByDialog from './sortByDialog.svelte'
 	let sortByDialog: undefined
 	let addColDialog: undefined
 	let addCateDialog: undefined
