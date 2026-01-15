@@ -169,7 +169,7 @@ span.message {
 }
 
 .title {
-    background: url("./src/lib/images/title.gif");
+    background: url(src/lib/images/title.gif);
     background-size: contain;
     width: 100%;
     height: 70px;

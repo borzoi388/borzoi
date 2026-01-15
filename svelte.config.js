@@ -11,6 +11,7 @@ const config = {
       out: '.',
       fallback: '404.html'
     }),
+	appDir: "app",
     paths: {
       base: '',
     },
