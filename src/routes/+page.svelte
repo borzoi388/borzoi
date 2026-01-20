@@ -1,11 +1,5 @@
 <script lang="ts">
-	import { writable } from 'svelte/store';
-
 	let isFirstTime = true;
-	if (window.localStorage.getItem("isFirstTime") == "false") {
-		isFirstTime = false;
-	}
-	window.localStorage.setItem("isFirstTime", isFirstTime.toString());
 
 
 	let cateNumber: number = 0
