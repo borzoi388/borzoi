@@ -16,6 +16,5 @@
 		grid-template-rows: [body] auto [end];
 		align-items: flex-start;
 		font-family:Arial, Helvetica, sans-serif;
-		overflow: scroll
 	}
 </style>
